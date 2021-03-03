@@ -7,7 +7,9 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" "public" {
-  cidr_block = var.public_subnets
+  count = var.subnet_count
+  cidr_block    = "10.0.1${count.index}.0/24"
+  //cidr_block = var.public_subnets
   vpc_id  = aws_vpc.main.id
   map_public_ip_on_launch = "true"
   tags = {
@@ -35,7 +37,8 @@ resource "aws_route_table" "rt" {
 }
 
 resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.public.id
+  count = var.subnet_count
+  subnet_id      = aws_subnet.public.*.id[count.index]
   route_table_id = aws_route_table.rt.id
 }
 

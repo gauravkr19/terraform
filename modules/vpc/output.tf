@@ -9,5 +9,5 @@ output "vpc-id" {       //for sg
 }
 
 output "public_subnets" {     //for subnet in ec2
-  value       = aws_subnet.public.id
+  value       = aws_subnet.public.*.id
 }

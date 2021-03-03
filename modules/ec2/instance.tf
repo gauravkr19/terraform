@@ -9,10 +9,11 @@ data "aws_ami" "amazon_linux" {
 }
 
 resource "aws_instance" "app" {
+  count = var.inst_count
   ami = data.aws_ami.amazon_linux.id
   instance_type = "t2.micro"
-  subnet_id = var.subnet_ids
-  count = var.inst_count
+  //subnet_id = [var.subnet_ids]
+  subnet_id    =  var.subnet_ids[count.index % length(var.subnet_ids)]  
   key_name   = aws_key_pair.generated_key.key_name
   vpc_security_group_ids = [aws_security_group.ssh-allowed.id]
   tags = {

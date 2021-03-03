@@ -1,24 +1,27 @@
 provider "aws" {
   region     = "us-east-1"
-  access_key = "AKIAYXOQNDBYZBFMH2B3"
-  secret_key = "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"
+  access_key = "AKIA3YI6BFYDCELEFCJS"
+  secret_key = "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"
 }
 
 module "ec2_instance" {
   source     = "./modules/ec2"
-  subnet_ids = module.vpc.public_subnets
-  inst_count = 1
+  subnet_ids = module.vpc.public_subnets[*]
+  inst_count = 2
   vpcid = module.vpc.vpc-id
   }
 
 module "vpc" {
   source = "./modules/vpc"
-  vpc-cidr = "10.0.0.0/16"
-  public_subnets = "10.0.1.0/24"
-  vpc_tag = {
-    Name = "prod-vpc"
-  }
+  subnet_count = 2
+  // vpc-cidr = "10.0.0.0/16"
+  // public_subnets = "10.0.1.0/24"
+  // public_subnets = aws_subnet.public.id
+  // vpc_tag = {
+  // Name = "prod-vpc"
+  // }
 }
+
 
 output "access-url" {
   value = module.ec2_instance.access-url[0]
